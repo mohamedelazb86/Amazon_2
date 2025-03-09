@@ -36,7 +36,7 @@ class Comment(models.Model):
     user=models.ForeignKey(User,related_name='comment_user',on_delete=models.SET_NULL,null=True,blank=True)
     publish_date=models.DateTimeField(default=timezone.now)
     comment=models.TextField(max_length=750)
-    rate=models.CharField(max_length=25,choices=[(i,i) for i in range(1,6)])
+    rate=models.CharField(max_length=25,choices=[(str(i),str(i))  for i in range(1,6)])
 
     def __str__(self):
         return str(self.post)

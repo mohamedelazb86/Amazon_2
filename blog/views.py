@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 
-from .models import Post
-from .forms import PostForm
+from .models import Post,Comment
+from .forms import PostForm,CommentForm
 
 def post_list(request):
     posts=Post.objects.all()
@@ -26,8 +26,21 @@ def post_list(request):
 
 def post_detail(request,slug):
     post=Post.objects.get(slug=slug)
+    if request.method=='POST':
+        form=CommentForm(request.POST)
+        if form.is_valid():
+            myform=form.save(commit=False)
+            myform.post=post
+            myform.user=request.user
+            myform.save()
+            return redirect(f'/blog/{post.slug}')
+    else:
+        form=CommentForm()
+    comments=Comment.objects.filter(post=post)
     context={
-        'post':post
+        'post':post,
+        'form':form,
+        'comments':comments
     }
     return render(request,'blog/post_detail.html',context)
 def delete_post(request,slug):
