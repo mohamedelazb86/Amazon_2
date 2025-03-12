@@ -38,6 +38,7 @@ class Brand(models.Model):
         return self.name
     def save(self,*args,**kwargs):
         self.slug=slugify(self.name)
+        super(Brand,self).save(*args,**kwargs)
 
 
 class ProductImage(models.Model):
@@ -51,7 +52,7 @@ class Review(models.Model):
     user=models.ForeignKey(User,related_name='review_user',on_delete=models.SET_NULL,null=True,blank=True)
     product=models.ForeignKey(Product,related_name='review_product',on_delete=models.CASCADE)
     review=models.TextField(max_length=1500)
-    rate=models.CharField(max_length=35,choices=[(i,i) for i in range(1,5)])
+    rate=models.IntegerField(choices=[(i,i) for i in range(1,6)])
     publish_date=models.DateTimeField(default=timezone.now)
 
     def __str__(self):
